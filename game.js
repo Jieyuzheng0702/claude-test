@@ -34,6 +34,7 @@ let currentDropX = GAME_WIDTH / 2;
 let merging = new Set();
 let gameOverTimer = null;
 let gameOverCheckId = null;
+let mergeIntervalId = null;
 let droppedBodies = new Set();
 
 function drawClawd(ctx, cx, cy, size, level, angle) {
@@ -239,9 +240,11 @@ function init() {
   gameOver = false;
   canDrop = true;
   merging = new Set();
+  mergeQueue = [];
   droppedBodies = new Set();
   gameOverTimer = null;
   if (gameOverCheckId) clearInterval(gameOverCheckId);
+  if (mergeIntervalId) clearInterval(mergeIntervalId);
   nextLevel = randomLevel();
   updateScore();
   updateNextBallPreview();
@@ -280,6 +283,7 @@ function init() {
   Events.on(engine, 'collisionStart', onCollision);
   Events.on(render, 'afterRender', drawAllClawds);
 
+  mergeIntervalId = setInterval(processMergeQueue, 50);
   gameOverCheckId = setInterval(checkGameOver, 500);
 }
 
@@ -362,6 +366,8 @@ function drawAllClawds() {
   ctx.restore();
 }
 
+let mergeQueue = [];
+
 function onCollision(event) {
   for (const pair of event.pairs) {
     const a = pair.bodyA;
@@ -375,20 +381,32 @@ function onCollision(event) {
     merging.add(a.id);
     merging.add(b.id);
 
-    const newLevel = a.fruitLevel + 1;
-    const midX = (a.position.x + b.position.x) / 2;
-    const midY = (a.position.y + b.position.y) / 2;
+    mergeQueue.push({
+      a, b,
+      newLevel: a.fruitLevel + 1,
+      midX: (a.position.x + b.position.x) / 2,
+      midY: (a.position.y + b.position.y) / 2,
+    });
+  }
+}
 
-    Composite.remove(engine.world, a);
-    Composite.remove(engine.world, b);
+function processMergeQueue() {
+  if (mergeQueue.length === 0) return;
 
-    createFruit(midX, midY, newLevel);
+  const batch = mergeQueue.splice(0, 3);
+  for (const m of batch) {
+    if (!Composite.get(engine.world, m.a.id, 'body')) continue;
 
-    score += (newLevel + 1) * 10;
+    Composite.remove(engine.world, m.a);
+    Composite.remove(engine.world, m.b);
+
+    createFruit(m.midX, m.midY, m.newLevel);
+
+    score += (m.newLevel + 1) * 10;
     updateScore();
 
-    merging.delete(a.id);
-    merging.delete(b.id);
+    merging.delete(m.a.id);
+    merging.delete(m.b.id);
   }
 }
 
