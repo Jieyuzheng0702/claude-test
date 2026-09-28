@@ -2,17 +2,23 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>合成大克蟹</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
+    html, body {
       background: #1a1a2e;
+      min-height: 100vh;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    body {
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      align-items: flex-start;
+      padding: 16px 0;
       font-family: 'Segoe UI', sans-serif;
       color: #fff;
     }
@@ -21,7 +27,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      width: 400px;
+      transform-origin: top center;
     }
 
     #game-title {
@@ -35,17 +43,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 400px;
+      width: 100%;
+      padding: 0 4px;
     }
 
     #score {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: bold;
     }
 
     #restart-btn {
-      padding: 8px 20px;
-      font-size: 16px;
+      padding: 8px 18px;
+      font-size: 15px;
       border: none;
       border-radius: 6px;
       background: #D4845A;
@@ -57,10 +66,10 @@
     #restart-btn:hover { background: #B5704C; }
 
     #next-ball {
-      font-size: 16px;
+      font-size: 15px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     #next-ball-canvas {
@@ -122,7 +131,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      width: 400px;
+      width: 100%;
       justify-content: center;
       margin-top: 4px;
     }
@@ -162,5 +171,15 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
   <script src="game.js"></script>
+  <script>
+    function scaleGame() {
+      const wrapper = document.getElementById('game-wrapper');
+      const maxW = window.innerWidth - 32;
+      const scale = Math.min(1, maxW / 400);
+      wrapper.style.transform = `scale(${scale})`;
+    }
+    scaleGame();
+    window.addEventListener('resize', scaleGame);
+  </script>
 </body>
 </html>
