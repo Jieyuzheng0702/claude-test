@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>合成大克蟹</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+    }
+
+    #game-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #game-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #D4845A;
+      letter-spacing: 4px;
+    }
+
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 400px;
+    }
+
+    #score {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    #restart-btn {
+      padding: 8px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #D4845A;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #restart-btn:hover { background: #B5704C; }
+
+    #next-ball {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #next-ball-canvas {
+      display: inline-block;
+    }
+
+    #game-container {
+      position: relative;
+      width: 400px;
+      height: 600px;
+      border: 3px solid #D4845A;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #16213e;
+    }
+
+    #game-canvas {
+      display: block;
+    }
+
+    #game-over-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    #game-over-overlay.show {
+      display: flex;
+    }
+
+    #game-over-overlay h2 {
+      font-size: 36px;
+      color: #D4845A;
+    }
+
+    #game-over-overlay p {
+      font-size: 20px;
+    }
+
+    #drop-line {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: rgba(212, 132, 90, 0.3);
+      pointer-events: none;
+      display: none;
+      z-index: 5;
+    }
+
+    #legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 400px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .legend-clawd {
+      display: inline-block;
+      image-rendering: pixelated;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-wrapper">
+    <h1 id="game-title">合成大克蟹</h1>
+    <div id="header">
+      <div id="score">分数: 0</div>
+      <div id="next-ball">下一个: <canvas id="next-ball-canvas" width="32" height="32"></canvas></div>
+      <button id="restart-btn">重新开始</button>
+    </div>
+    <div id="game-container">
+      <canvas id="game-canvas" width="400" height="600"></canvas>
+      <div id="drop-line"></div>
+      <div id="game-over-overlay">
+        <h2>游戏结束!</h2>
+        <p id="final-score">最终分数: 0</p>
+      </div>
+    </div>
+    <div id="legend"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
