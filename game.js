@@ -256,13 +256,16 @@ function init() {
   if (engine) {
     Composite.clear(engine.world, false);
     Engine.clear(engine);
-    if (render) { Render.stop(render); render.canvas.remove(); }
+    if (render) Render.stop(render);
     if (runner) Runner.stop(runner);
   }
 
   engine = Engine.create({ gravity: { x: 0, y: 1.5 } });
 
   const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
   render = Render.create({
     canvas,
     engine,
